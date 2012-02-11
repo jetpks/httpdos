@@ -11,6 +11,9 @@
     , successes = 0
     , EventEmitter = require('events').EventEmitter
     , supervisor = new EventEmitter()
+    , startTime
+    , nowMin
+    , nowSec
     ;
 
 
@@ -40,6 +43,7 @@
     } else {
       timeLimit = -1;
     }
+    startTime = parseInt(Date.now() / 1000);
     supervisor.emit('initialized');
   }
 
@@ -54,7 +58,9 @@
   function runMany() {
     var index = 0;
     while(index++ < concurrent) {
-      http.get({ host: target, port: 80, path: '/', headers: {connection: 'close'}}, answer);
+      http.get({ host: target, port: 80, path: '/', headers: {connection: 'close'}}, answer).on('error', function(e) {
+        supervisor.emit('oneDone', 'failure');
+      });
     }
   }
 
@@ -65,7 +71,9 @@
       failures += 1;
     }
     if((successes + failures) % concurrent == 0) {
-      console.log('Batch finished! Success:', successes, ' Fail:', failures);
+      nowMin = parseInt((parseInt(Date.now() / 1000) - startTime) / 60);
+      nowSec = parseInt((parseInt(Date.now() / 1000) - startTime) % 60);
+      console.log('Batch finished! Success:', successes, ' Fail:', failures, ' Elapsed (mm:ss):', nowMin + ':' + nowSec );
       runMany();
     }
   });
