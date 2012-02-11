@@ -1,0 +1,17 @@
+{
+  "author": "Eric Jacobs <eric@chomp.us> (http://techosaur.us/)",
+  "name": "httpdos",
+  "description": "Tool for running a DoS attack against HTTP servers.",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:techosaurus/httpdos"
+  },
+  "engines": {
+    "node": "~0.6.7"
+  },
+  "dependencies": {
+    "ahr2": "~2.2.4"
+  },
+  "devDependencies": {}
+}
